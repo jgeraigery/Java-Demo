@@ -28,7 +28,7 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           WS_APIKEY: ${{secrets.APIKEY}}
           WS_USERKEY: ${{secrets.USERKEY}}
-          WS_WSS_URL: $WS_URL/agent
+          WS_WSS_URL: ${{env.WS_URL}}/agent
           WS_PRODUCTNAME: GH_${{github.event.repository.name}}
           WS_PROJECTNAME: ${{github.ref}}_SBOM
           WS_GENERATEPROJECTDETAILSJSON: true
