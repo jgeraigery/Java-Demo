@@ -44,7 +44,7 @@ jobs:
           sed -i 's%~=0.7.0%==.0.7.0a3%1' requirements.txt
           pip3 install -r requirements.txt
           cd ./sbom_report
-          python ./sbom_report.py -u $WS_USERKEY -k $WS_APIKEY -s $WS_PROJECTTOKEN -a $WS_URL -t tv -o ../../whitesource
+          python ./sbom_report_generator.py -u $WS_USERKEY -k $WS_APIKEY -s $WS_PROJECTTOKEN -a $WS_URL -t tv -o ../../whitesource
       - name: 'Upload WhiteSource folder'
         uses: actions/upload-artifact@v2
         with:
