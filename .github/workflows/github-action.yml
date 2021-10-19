@@ -28,19 +28,26 @@ jobs:
           WS_USERKEY: ${{secrets.USERKEY}}
           WS_WSS_URL: https://saas.whitesourcesoftware.com/agent
           WS_PRODUCTNAME: GH_${{github.event.repository.name}}
-          WS_PROJECTNAME: ${{github.ref}}_Prioritize
-          WS_ENABLEIMPACTANALYSIS: true
-          WS_REQUIREKNOWNSHA1: false
-          WS_RESOLVEALLDEPENDENCIES: false
-          WS_MAVEN_RESOLVEDEPENDENCIES: true
-          WS_MAVEN_AGGREGATEMODULES: true
-          WS_FILESYSTEMSCAN: false
+          WS_PROJECTNAME: ${{github.ref}}_SBOM
           WS_GENERATEPROJECTDETAILSJSON: true
         run: |
           curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
           echo Unified Agent downloaded successfully
-          WARFILE=$(find ./ -type f -wholename "*/target/*.war")
-          echo $WARFILE will be added to appPath
-          java -jar wss-unified-agent.jar -appPath $WARFILE -d ./
-          curl -LJO https://raw.githubusercontent.com/whitesource-ft/ws-examples/main/Scripts/ghissue-eua.sh
-          chmod +x ./ghissue-eua.sh && ./ghissue-eua.sh saas
+          java -jar wss-unified-agent.jar
+          WS_PROJECTTOKEN=$(jq -r '.projects | .[] | .projectToken' ./whitesource/scanProjectDetails.json)
+          echo "project token" $WS_PROJECTTOKEN
+          git clone https://github.com/spdx/tools-python.git && cd ./tools-python
+          git checkout -b v0.7.0a3
+          pip install .
+          cd .. && git clone https://github.com/whitesource-ps/ws-sbom-spdx-report.git
+          cd ./ws-sbom-spdx-report && git checkout remotes/origin/Prep_ver_7
+          sed -i 's%~=0.7.0%==.0.7.0a3%1' requirements.txt
+          pip3 install -r requirements.txt
+          cd ./sbom_report
+          python ./sbom_report.py -u $WS_USERKEY -k $WS_APIKEY -s $WS_PROJECTTOKEN -a $WS_URL -t tv -o ../../whitesource
+      - name: 'Upload WhiteSource folder'
+        uses: actions/upload-artifact@v2
+        with:
+          name: WhiteSource
+          path: whitesource
+          retention-days: 1
