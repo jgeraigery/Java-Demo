@@ -36,20 +36,8 @@ jobs:
           curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
           echo Unified Agent downloaded successfully
           java -jar wss-unified-agent.jar
-          WS_PROJECTTOKEN=$(jq -r '.projects | .[] | .projectToken' ./whitesource/scanProjectDetails.json)
-          echo "project token" $WS_PROJECTTOKEN
-          git clone https://github.com/spdx/tools-python.git && cd ./tools-python
-          git checkout -b v0.7.0a3
-          pip install .
-          cd .. && git clone https://github.com/whitesource-ps/ws-sbom-spdx-report.git
-          cd ./ws-sbom-spdx-report && git checkout remotes/origin/Prep_ver_7
-          sed -i 's%~=0.7.0%==.0.7.0a3%1' requirements.txt
-          pip3 install -r requirements.txt
-          cd ./sbom_report
-          sed -i 's%person name%Sam Quakenbush%1' sbom_extra.json
-          sed -i 's%person@email.address%sam.quakenbush@whitesourcesoftware.com%1' sbom_extra.json
-          cat sbom_extra.json
-          python ./sbom_report_generator.py -u $WS_USERKEY -k $WS_APIKEY -s $WS_PROJECTTOKEN -a $WS_URL -t tv -o ../../whitesource
+          curl -LJO https://raw.githubusercontent.com/whitesource-ft/ws-examples/main/Scripts/ghissue-prioritize.sh
+          chmod +x ./ghissue-prioritize.sh && ./ghissue-prioritize.sh saas
       - name: 'Upload WhiteSource folder'
         uses: actions/upload-artifact@v2
         with:
