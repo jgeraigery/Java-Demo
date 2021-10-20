@@ -36,8 +36,8 @@ jobs:
           curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
           echo Unified Agent downloaded successfully
           java -jar wss-unified-agent.jar
-          curl -LJO https://raw.githubusercontent.com/whitesource-ft/ws-examples/main/Scripts/ghissue-prioritize.sh
-          chmod +x ./ghissue-prioritize.sh && ./ghissue-prioritize.sh saas
+          curl -LJO https://raw.githubusercontent.com/whitesource-ft/ws-examples/main/Scripts/pipelineSBOM.sh
+          chmod +x ./pipelineSBOM.sh && ./pipelineSBOM.sh saas
       - name: 'Upload WhiteSource folder'
         uses: actions/upload-artifact@v2
         with:
