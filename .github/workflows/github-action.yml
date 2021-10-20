@@ -30,7 +30,7 @@ jobs:
           WS_USERKEY: ${{secrets.USERKEY}}
           WS_WSS_URL: ${{env.WS_URL}}/agent
           WS_PRODUCTNAME: GH_${{github.event.repository.name}}
-          WS_PROJECTNAME: ${{github.ref}}_SBOM
+          WS_PROJECTNAME: ${{github.ref}}
           WS_GENERATEPROJECTDETAILSJSON: true
         run: |
           curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
@@ -48,6 +48,7 @@ jobs:
           cd ./sbom_report
           sed -i 's%person name%Sam Quakenbush%1' sbom_extra.json
           sed -i 's%person@email.address%sam.quakenbush@whitesourcesoftware.com%1' sbom_extra.json
+          cat sbom_extra.json
           python ./sbom_report_generator.py -u $WS_USERKEY -k $WS_APIKEY -s $WS_PROJECTTOKEN -a $WS_URL -t tv -o ../../whitesource
       - name: 'Upload WhiteSource folder'
         uses: actions/upload-artifact@v2
