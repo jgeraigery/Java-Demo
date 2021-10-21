@@ -49,7 +49,7 @@ jobs:
           sed -i 's%person@email.address%sam.quakenbush@whitesourcesoftware.com%1' ./resources/sbom_extra.json
           cat ./resources/sbom_extra.json
           cd ./sbom_generator
-          python ./sbom_generator.py -u $WS_USERKEY -k $WS_APIKEY -s $WS_PROJECTTOKEN -a $WS_URL -t tv -o ../../whitesource
+          python ./sbom_generator.py -u $WS_USERKEY -k $WS_APIKEY -s $WS_PROJECTTOKEN -e ../resoures/sbom_extra.json -a $WS_URL -t tv -o ../../whitesource
       - name: 'Upload WhiteSource folder'
         uses: actions/upload-artifact@v2
         with:
