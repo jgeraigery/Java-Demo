@@ -47,24 +47,12 @@ jobs:
           java -jar wss-unified-agent.jar
           WS_PROJECTTOKEN=$(jq -r '.projects | .[] | .projectToken' ./whitesource/scanProjectDetails.json)
           echo "project token" $WS_PROJECTTOKEN
-          git clone https://github.com/spdx/tools-python.git && cd ./tools-python
-          git checkout -b v0.7.0a3
-          pip install .
-          cd .. && git clone https://github.com/whitesource-ps/ws-sbom-spdx-report.git
-          cd ./ws-sbom-spdx-report && git checkout remotes/origin/Prep_ver_7
-          sed -i 's%~=0.7.0%==.0.7.0a3%1' requirements.txt
-          pip3 install -r requirements.txt
-          pip list
-          sed -i 's%person name%Sam Quakenbush%1' ./resources/sbom_extra.json
-          sed -i 's%person@email.address%sam.quakenbush@whitesourcesoftware.com%1' ./resources/sbom_extra.json
-          cat ./resources/sbom_extra.json
-          echo "cat sbom_extra"
-          cd ./sbom_generator
+          pip install ws_sbom_generator
           echo "WS_URL is" $WS_URL
-          python ./sbom_generator.py -u $WS_USERKEY -k $WS_APIKEY -s $WS_PROJECTTOKEN -e ../resources/sbom_extra.json -a $WS_URL -t tv -o ../../whitesource
-#      - name: 'Upload WhiteSource folder'
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: WhiteSource
-#          path: whitesource
-#          retention-days: 1
+          sbom_generator -u $WS_USERKEY -k $WS_APIKEY -s $WS_PROJECTTOKEN -a $WS_URL -t tv -o ../../whitesource
+      - name: 'Upload WhiteSource folder'
+        uses: actions/upload-artifact@v2
+        with:
+          name: WhiteSource
+          path: whitesource
+          retention-days: 1
