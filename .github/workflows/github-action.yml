@@ -32,6 +32,7 @@ jobs:
           WS_WSS_URL: ${{env.WS_URL}}/agent
           WS_PRODUCTNAME: GH_${{github.event.repository.name}}
           WS_PROJECTNAME: ${{github.ref}}
+          WS_MAVEN_RUNPRESTEP: true
           WS_GENERATEPROJECTDETAILSJSON: true
         run: |
           curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
