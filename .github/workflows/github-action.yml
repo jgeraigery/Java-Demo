@@ -36,8 +36,10 @@ jobs:
           curl -LJO https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar
           echo Unified Agent downloaded successfully
           java -jar wss-unified-agent.jar
-          curl -LJO https://raw.githubusercontent.com/whitesource-ft/ws-examples/main/Scripts/pipelineSBOM.sh
-          chmod +x ./pipelineSBOM.sh && ./pipelineSBOM.sh saas
+          export WS_PROJECTTOKEN=$(jq -r '.projects | .[] | .projectToken' ./whitesource/scanProjectDetails.json)
+          export WS_URL=$(echo $WS_WSS_URL | awk -F "agent" '{print $1}')
+          pip install ws_sbom_generator
+          ws_bom_generator -u $WS_USERKEY -k $WS_APIKEY -s $WS_PROJECTTOKEN -a $WS_URL -t tv -o ./whitesource
       - name: 'Upload WhiteSource folder'
         uses: actions/upload-artifact@v2
         with:
