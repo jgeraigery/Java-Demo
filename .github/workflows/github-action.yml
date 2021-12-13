@@ -38,7 +38,7 @@ jobs:
           java -jar wss-unified-agent.jar
           export WS_PROJECTTOKEN=$(jq -r '.projects | .[] | .projectToken' ./whitesource/scanProjectDetails.json)
           export WS_URL=$(echo $WS_WSS_URL | awk -F "agent" '{print $1}')
-          pip install ws_sbom_generator
+          pip install ws-sbom-generator
           ws_sbom_generator -u $WS_USERKEY -k $WS_APIKEY -s $WS_PROJECTTOKEN -a $WS_URL -t tv -o ./whitesource
       - name: 'Upload WhiteSource folder'
         uses: actions/upload-artifact@v2
